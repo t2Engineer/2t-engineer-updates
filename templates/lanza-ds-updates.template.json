@@ -13,5 +13,14 @@
       "size": 1024,
       "notes": "REPLACE: назначение и подтверждённые проверки"
     }
-  ]
+  ],
+  "app_update": {
+    "version": "REPLACE_APP_VERSION",
+    "target": "ANDROID",
+    "file_name": "2T_Engineer_REPLACE_VERSION.apk",
+    "url": "https://github.com/t2Engineer/2t-engineer-updates/releases/latest/download/2T_Engineer_REPLACE_VERSION.apk",
+    "sha256": "REPLACE_WITH_64_LOWERCASE_HEX_CHARACTERS_NOT_ZEROS",
+    "size": 1024,
+    "notes": "REPLACE: изменения приложения и результаты unit/static тестов"
+  }
 }
