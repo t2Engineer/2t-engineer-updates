@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/t2Engineer/2t-engineer-updates/blob/main/schema/lanza-ds-updates.schema.json",
+  "title": "2T Инженер firmware update catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "release_name", "release_notes", "updates"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "release_name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "release_notes": { "type": "string", "maxLength": 1200 },
+    "updates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/update" }
+    }
+  },
+  "$defs": {
+    "update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "version", "target", "file_name", "url", "sha256", "size", "notes"],
+      "properties": {
+        "kind": { "enum": ["ota", "core"] },
+        "version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "target": { "enum": ["16MB", "START-4MB", "MOTO2", "LEGACY4", "ANY"] },
+        "file_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^/\\\\]+$"
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 512,
+          "pattern": "^https://(github\\.com|api\\.github\\.com|raw\\.githubusercontent\\.com|objects\\.githubusercontent\\.com|release-assets\\.githubusercontent\\.com)/"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^(?!0{64}$)[0-9a-f]{64}$"
+        },
+        "size": { "type": "integer", "minimum": 1024, "maximum": 4194304 },
+        "notes": { "type": "string", "maxLength": 600 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "ota" } } },
+          "then": {
+            "properties": {
+              "target": { "enum": ["16MB", "START-4MB", "ANY"] },
+              "file_name": { "pattern": "\\.bin$" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "core" } } },
+          "then": {
+            "properties": {
+              "target": { "enum": ["MOTO2", "LEGACY4", "ANY"] },
+              "file_name": { "pattern": "\\.(bin|crp)$" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
