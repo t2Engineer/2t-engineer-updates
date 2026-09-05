@@ -21,77 +21,62 @@
     { "required": ["app_update"] }
   ],
   "$defs": {
-    "common": {
+    "deviceUpdate": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["version", "target", "file_name", "url", "sha256", "size", "notes"],
+      "required": ["kind", "version", "target", "file_name", "url", "sha256", "size", "notes"],
       "properties": {
+        "kind": { "enum": ["ota", "core"] },
         "version": { "type": "string", "minLength": 1, "maxLength": 64 },
-        "target": { "type": "string", "minLength": 1, "maxLength": 48 },
-        "file_name": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 128,
-          "pattern": "^[^/\\\\]+$"
-        },
+        "target": { "enum": ["16MB", "START-4MB", "MOTO2", "MOTO1", "LEGACY4", "MIGRATION", "ANY"] },
+        "file_name": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[^/\\\\]+$" },
         "url": {
           "type": "string",
           "maxLength": 512,
           "pattern": "^https://(github\\.com|api\\.github\\.com|raw\\.githubusercontent\\.com|objects\\.githubusercontent\\.com|release-assets\\.githubusercontent\\.com)/"
         },
-        "sha256": {
-          "type": "string",
-          "pattern": "^(?!0{64}$)[0-9a-f]{64}$"
-        },
-        "size": { "type": "integer", "minimum": 1024 },
+        "sha256": { "type": "string", "pattern": "^(?!0{64}$)[0-9a-f]{64}$" },
+        "size": { "type": "integer", "minimum": 1024, "maximum": 4194304 },
         "notes": { "type": "string", "maxLength": 600 }
-      }
-    },
-    "deviceUpdate": {
+      },
       "allOf": [
-        { "$ref": "#/$defs/common" },
         {
-          "type": "object",
-          "required": ["kind"],
-          "properties": {
-            "kind": { "enum": ["ota", "core"] },
-            "size": { "maximum": 4194304 }
-          },
-          "allOf": [
-            {
-              "if": { "properties": { "kind": { "const": "ota" } } },
-              "then": {
-                "properties": {
-                  "target": { "enum": ["16MB", "START-4MB", "ANY"] },
-                  "file_name": { "pattern": "\\.bin$" }
-                }
-              }
-            },
-            {
-              "if": { "properties": { "kind": { "const": "core" } } },
-              "then": {
-                "properties": {
-                  "target": { "enum": ["MOTO2", "MOTO1", "LEGACY4", "MIGRATION", "ANY"] },
-                  "file_name": { "pattern": "\\.(bin|crp)$" }
-                }
-              }
+          "if": { "properties": { "kind": { "const": "ota" } } },
+          "then": {
+            "properties": {
+              "target": { "enum": ["16MB", "START-4MB", "ANY"] },
+              "file_name": { "pattern": "\\.bin$" }
             }
-          ]
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "core" } } },
+          "then": {
+            "properties": {
+              "target": { "enum": ["MOTO2", "MOTO1", "LEGACY4", "MIGRATION", "ANY"] },
+              "file_name": { "pattern": "\\.(bin|crp)$" }
+            }
+          }
         }
       ]
     },
     "appUpdate": {
-      "allOf": [
-        { "$ref": "#/$defs/common" },
-        {
-          "type": "object",
-          "properties": {
-            "target": { "enum": ["ANDROID", "ANY"] },
-            "file_name": { "pattern": "\\.apk$" },
-            "size": { "maximum": 100663296 }
-          }
-        }
-      ]
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "target", "file_name", "url", "sha256", "size", "notes"],
+      "properties": {
+        "version": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "target": { "enum": ["ANDROID", "ANY"] },
+        "file_name": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[^/\\\\]+\\.apk$" },
+        "url": {
+          "type": "string",
+          "maxLength": 512,
+          "pattern": "^https://(github\\.com|api\\.github\\.com|raw\\.githubusercontent\\.com|objects\\.githubusercontent\\.com|release-assets\\.githubusercontent\\.com)/"
+        },
+        "sha256": { "type": "string", "pattern": "^(?!0{64}$)[0-9a-f]{64}$" },
+        "size": { "type": "integer", "minimum": 1024, "maximum": 100663296 },
+        "notes": { "type": "string", "maxLength": 600 }
+      }
     }
   }
 }
