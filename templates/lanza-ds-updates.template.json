@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "release_name": "REPLACE: название согласованного выпуска",
+  "release_notes": "REPLACE: краткое описание изменений и результаты проверки",
+  "updates": [
+    {
+      "kind": "ota",
+      "version": "REPLACE_VERSION",
+      "target": "16MB",
+      "file_name": "REPLACE_VERSIONED_16MB_FILE.bin",
+      "url": "https://github.com/t2Engineer/2t-engineer-updates/releases/latest/download/REPLACE_VERSIONED_16MB_FILE.bin",
+      "sha256": "REPLACE_WITH_64_LOWERCASE_HEX_CHARACTERS_NOT_ZEROS",
+      "size": 1024,
+      "notes": "REPLACE: назначение и подтверждённые проверки"
+    }
+  ]
+}
