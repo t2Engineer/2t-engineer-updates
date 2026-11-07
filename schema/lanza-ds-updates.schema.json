@@ -28,7 +28,7 @@
       "properties": {
         "kind": { "enum": ["ota", "core"] },
         "version": { "type": "string", "minLength": 1, "maxLength": 64 },
-        "target": { "enum": ["16MB", "START-4MB", "MOTO2", "MOTO1", "LEGACY4", "MIGRATION", "ANY"] },
+        "target": { "enum": ["16MB", "MOTO2", "MOTO1", "LEGACY4", "MIGRATION", "ANY"] },
         "file_name": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[^/\\\\]+$" },
         "url": {
           "type": "string",
@@ -44,7 +44,7 @@
           "if": { "properties": { "kind": { "const": "ota" } } },
           "then": {
             "properties": {
-              "target": { "enum": ["16MB", "START-4MB", "ANY"] },
+              "target": { "enum": ["16MB", "ANY"] },
               "file_name": { "pattern": "\\.bin$" }
             }
           }
